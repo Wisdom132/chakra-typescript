@@ -24,6 +24,6 @@ const requests = {
 
 export const ProductRequest = {
   getProducts: (): Promise<ProductType[]> => requests.get("/"),
-  createPost: (product: ProductType): Promise<ProductType> =>
+  createPost: (product: any): Promise<ProductType> =>
     requests.post("/", product),
 };

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Image, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Image, HStack, Spinner,SimpleGrid } from "@chakra-ui/react";
 import { ProductRequest } from "../api";
-
-let getPost = async (callback) => {
+import { ProductType } from '../models/product.interface'
+import './component.css'
+let getPost = async (callback:any) => {
   let response = await ProductRequest.getProducts();
-  console.log(response.data);
-  callback([...response.data]);
+  callback([...response.data.reverse()]);
 };
 
 const Products = () => {
@@ -16,15 +16,16 @@ const Products = () => {
     getPost(setAllProducts);
   }, []);
 
-  let products = allProducts.map((product, index) => (
-    <Box
-      maxW='sm'
+  let products = allProducts.map((product:ProductType, index) => (
+      <Box
+        bg="white"
+      maxW='lg'
       borderWidth='1px'
       borderRadius='lg'
       key={index}
       overflow='hidden'
       boxShadow='lg'>
-      <Image src={product.image} />
+      <Image src={product.image} className="product-image" />
       <Box p='6'>
         <Box mt='1' fontWeight='semibold' as='h4' lineHeight='tight' isTruncated>
           {product.name}
@@ -34,8 +35,10 @@ const Products = () => {
     </Box>
   ));
 
-  return (
-    <HStack id='Debunking Myths' px={6} py={10} bg='blue.50' rounded='lg'>
+    return (
+      
+    <SimpleGrid columns={4} spacing={10} paddingX="50" paddingY="30" bg='blue.50' rounded='lg'>
+
       {!fetched ? (
         <Spinner
           thickness='4px'
@@ -46,8 +49,8 @@ const Products = () => {
         />
       ) : (
         products
-      )}
-    </HStack>
+                )}
+                </SimpleGrid>
   );
 };
 

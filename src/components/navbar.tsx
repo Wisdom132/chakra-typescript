@@ -13,12 +13,15 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
+  Box
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { ProductRequest } from "../api";
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast()
 
   const productForm = useFormik({
     initialValues: {
@@ -26,12 +29,28 @@ const Header = () => {
       price: "",
       image: "",
     },
-    onSubmit: async (formData) => {
-      const response = await ProductRequest.createPost({ ...formData });
+    onSubmit: async (payload) => {
 
+      const formData = new FormData();
+      formData.append("name", payload.name)
+      formData.append("price", payload.price)
+      formData.append("image", payload.image)
+      
+      
+      const response = await ProductRequest.createPost(formData);
+      onClose()
+       toast({
+          title: "Post created.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
       console.log("=====Response=======>", response);
     },
   });
+
+
+
 
   const handleFileChange = (e) => {
     productForm.setFieldValue("image", e.target.files[0]);
