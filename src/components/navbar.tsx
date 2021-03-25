@@ -1,68 +1,102 @@
 import React from "react";
-import {Heading, Flex,  Button, Modal,
+import {
+  Heading,
+  Flex,
+  Button,
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalCloseButton, useDisclosure, FormControl,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-
+import { useFormik } from "formik";
+import { ProductRequest } from "../api";
 
 const Header = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const productForm = useFormik({
+    initialValues: {
+      name: "",
+      price: "",
+      image: "",
+    },
+    onSubmit: async (formData) => {
+      const response = await ProductRequest.createPost({ ...formData });
+
+      console.log("=====Response=======>", response);
+    },
+  });
+
+  const handleFileChange = (e) => {
+    productForm.setFieldValue("image", e.target.files[0]);
+  };
+
   return (
     <>
-    <Flex
-      as="nav"
-      align="center"
-      justify="space-between"
-      wrap="wrap"
-      padding="1.5rem"
-      bg="black"
-      color="white"
-    
-    >
-      <Flex align="center" mr={5}>
-        <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-         Lekkify
-        </Heading>
+      <Flex
+        as='nav'
+        align='center'
+        justify='space-between'
+        wrap='wrap'
+        padding='1.5rem'
+        bg='black'
+        color='white'>
+        <Flex align='center' mr={5}>
+          <Heading as='h1' size='lg' letterSpacing={"-.1rem"}>
+            Lekkify
+          </Heading>
+        </Flex>
+        <Button colorScheme='teal' onClick={onOpen} size='sm'>
+          Add Product
+        </Button>
       </Flex>
-          <Button colorScheme="teal" onClick={onOpen} size="sm">Add Product</Button>
-      </Flex>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          <FormControl id="email">
-            <FormLabel>Name</FormLabel>
-            <Input type="text" />
-            </FormControl>
-             <FormControl id="email">
-              <FormLabel>Price</FormLabel>
-              <Input type="number" />
-            </FormControl>
-             <FormControl id="email">
-            <FormLabel>Image</FormLabel>
-            <Input type="file" />
-            </FormControl>
-            
-             <Button
-            mt={4}
-            colorScheme="teal"
-            type="submit"
-          >
-            Submit
-          </Button>
+            <form onSubmit={productForm.handleSubmit}>
+              <FormControl id='name'>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  onChange={productForm.handleChange}
+                  value={productForm.values.name}
+                  type='text'
+                />
+              </FormControl>
+              <FormControl id='price'>
+                <FormLabel>Price</FormLabel>
+                <Input
+                  onChange={productForm.handleChange}
+                  value={productForm.values.price}
+                  type='number'
+                />
+              </FormControl>
+              <FormControl id='image'>
+                <FormLabel>Image</FormLabel>
+                <Input onChange={handleFileChange} type='file' />
+              </FormControl>
+
+              <Button
+                isLoading={productForm.isSubmitting}
+                mt={4}
+                colorScheme='teal'
+                type='submit'>
+                Submit
+              </Button>
+            </form>
           </ModalBody>
         </ModalContent>
       </Modal>
-
-</>
-
+    </>
   );
 };
 
