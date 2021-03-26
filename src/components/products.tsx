@@ -28,7 +28,8 @@ const Products = ({ fetched, products }: { fetched: boolean; products: ProductTy
 
   return (
     <SimpleGrid
-      columns={4}
+     columns={[1, null, 4]}
+      
       spacing={10}
       paddingX='50'
       paddingY='30'
