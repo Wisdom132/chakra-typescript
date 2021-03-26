@@ -38,6 +38,12 @@ const Header = () => {
       
       
       const response = await ProductRequest.createPost(formData);
+
+      // Do a check here 
+      // if (response.success) {
+      //   await ProductRequest.getProducts();
+      // }
+
       onClose()
        toast({
           title: "Post created.",
