@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Image, Spinner,SimpleGrid } from "@chakra-ui/react";
 import { ProductType } from '../models/product.interface'
 import './component.css'
+import NumberFormat from 'react-number-format';
+
 
 const Products = ({ fetched, products }: { fetched: boolean; products: ProductType[] }) => {
   let renderProducts = products.map((product: ProductType, index) => (
@@ -18,7 +20,8 @@ const Products = ({ fetched, products }: { fetched: boolean; products: ProductTy
         <Box mt='1' fontWeight='semibold' as='h4' lineHeight='tight' isTruncated>
           {product.name}
         </Box>
-        <Box>{product.price}</Box>
+        <Box><NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={'₦'} />
+</Box>
       </Box>
     </Box>
   ));
